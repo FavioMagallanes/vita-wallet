@@ -14,7 +14,7 @@ export const NavItem = ({ icon: Icon, label, to }: NavItemProps) => (
   >
     <Button
       variant="ghost"
-      className="w-full justify-start font-light hover:bg-[#05bcb9] hover:text-white"
+      className="w-full justify-start font-normal hover:bg-[#05bcb9] hover:text-white"
     >
       <Icon className="mr-2 h-4 w-4" />
       {label}

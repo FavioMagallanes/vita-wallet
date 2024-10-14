@@ -1,32 +1,69 @@
-import { FC } from "react";
+import React, { FC, useMemo } from "react";
 import { DollarSign } from "lucide-react";
 import { Transactions } from "./transactions";
+import {
+  TransactionsListResponse,
+  Datum,
+} from "@/modules/dashboard/types/transactions-types";
+import { formatAmount, formatDate } from "@/utils/formatters";
 
-const TransactionsList: FC = () => {
-  return (
-    <Transactions.Transaction>
-      <Transactions.Title>Historial</Transactions.Title>
-      <Transactions.Content>
-        {[1, 2, 3, 4].map((i) => (
-          <Transactions.Item key={i}>
-            <Transactions.Details>
-              <Transactions.Icon>
-                <DollarSign className="h-4 w-4 text-[#05bcb9] dark:text-blue-300" />
-              </Transactions.Icon>
-              <Transactions.Info>
-                <Transactions.MainText>Transferiste</Transactions.MainText>
-                <Transactions.SubText>{`2023-06-${15 + i}`}</Transactions.SubText>
-              </Transactions.Info>
-            </Transactions.Details>
-            <Transactions.Amount>
-              <Transactions.MainText>{`+0.0${5 - i} BTC`}</Transactions.MainText>
-              <Transactions.SubText>{`$1,${234 + i * 100}`}</Transactions.SubText>
-            </Transactions.Amount>
-          </Transactions.Item>
-        ))}
-      </Transactions.Content>
-    </Transactions.Transaction>
-  );
+type TransactionsListProps = {
+  transactionList: TransactionsListResponse;
 };
 
-export default TransactionsList;
+const TransactionItem: FC<{ transaction: Datum }> = React.memo(
+  ({ transaction }) => {
+    const formattedDate = useMemo(
+      () => formatDate(transaction.attributes.created_at),
+      [transaction.attributes.created_at],
+    );
+    const formattedAmount = useMemo(
+      () => formatAmount(transaction.attributes.amount),
+      [transaction.attributes.amount],
+    );
+
+    return (
+      <Transactions.Item>
+        <Transactions.Details>
+          <Transactions.Icon>
+            <DollarSign className="h-4 w-4 text-[#05bcb9] dark:text-blue-300" />
+          </Transactions.Icon>
+          <Transactions.Info>
+            <Transactions.MainText>
+              {transaction.attributes.description}
+            </Transactions.MainText>
+            <Transactions.SubText>{formattedDate}</Transactions.SubText>
+          </Transactions.Info>
+        </Transactions.Details>
+        <Transactions.Amount>
+          <Transactions.SubText>
+            {transaction.attributes.currency}
+          </Transactions.SubText>
+          <Transactions.MainText>${formattedAmount}</Transactions.MainText>
+          <Transactions.SubText>
+            {transaction.attributes.exchange_currency}
+          </Transactions.SubText>
+        </Transactions.Amount>
+      </Transactions.Item>
+    );
+  },
+);
+
+TransactionItem.displayName = "TransactionItem";
+
+export const TransactionsList: FC<TransactionsListProps> = React.memo(
+  ({ transactionList }) => {
+    return (
+      <Transactions.Transaction>
+        <Transactions.Title>Historial</Transactions.Title>
+        <Transactions.Content>
+          {transactionList.data.map((transaction) => (
+            <TransactionItem key={transaction.id} transaction={transaction} />
+          ))}
+        </Transactions.Content>
+      </Transactions.Transaction>
+    );
+  },
+);
+
+TransactionsList.displayName = "TransactionsList";

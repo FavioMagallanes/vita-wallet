@@ -21,13 +21,17 @@ export const Sidebar = () => {
   return (
     <aside
       className={cn(
-        "fixed inset-y-0 left-0 z-50 w-64 transform bg-[#167287] text-slate-100 shadow-lg transition-transform duration-300 ease-in-out dark:bg-gray-800 lg:static lg:translate-x-0",
+        "fixed inset-y-0 left-0 z-50 w-64 transform bg-[#ffffff] shadow-2xl transition-transform duration-300 ease-in-out dark:bg-gray-800 lg:static lg:translate-x-0",
         isSidebarOpen ? "translate-x-0" : "-translate-x-full",
       )}
     >
       <div className="flex h-full flex-col">
         <div className="flex h-16 items-center justify-between px-4">
-          <span className="text-2xl font-semibold">Crypto App</span>
+          <img
+            src="/public/logo.png"
+            alt="logo"
+            className="mt-6 h-8 w-auto lg:h-10"
+          />
           <Button
             variant="ghost"
             size="icon"
