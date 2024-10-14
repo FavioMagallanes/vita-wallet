@@ -24,13 +24,24 @@ export const Balance = () => {
         >
           <Menu className="h-6 w-6" />
         </Button>
-        <h1 className="text-xl font-semibold">¡Hola David!</h1>
+        <div className="flex items-center gap-2">
+          <img className="h-8 w-8" src="/public/icons/coin.svg" alt="icon" />
+          <h1 className="text-xl font-semibold">
+            ¡Hola{" "}
+            <span className="bg-gradient-to-r from-[#06b5b4] to-[#16768a] bg-clip-text font-extrabold text-transparent">
+              David!
+            </span>
+          </h1>
+        </div>
       </div>
       <div className="mt-2 flex flex-wrap items-center justify-between gap-2 sm:mt-0 sm:justify-end">
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-2">
+            <span className="text-sm font-medium">Mis saldos:</span>
+          </div>
+          <div className="flex items-center space-x-2">
             <img
-              className="h-6 w-6"
+              className="h-5 w-5"
               src="/public/icons/icono-usd.png"
               alt="usd logo"
             />

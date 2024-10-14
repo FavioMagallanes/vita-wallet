@@ -1,3 +1,4 @@
+import { useSidebar } from "@/context/use-sidebar";
 import { Button } from "../ui/button";
 import { NavItem } from "./nav-item";
 import {
@@ -11,7 +12,6 @@ import {
   LogOut,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useSidebar } from "@/context/use-sidebar";
 
 export const Sidebar = () => {
   const { isSidebarOpen, toggleSidebar } = useSidebar();
