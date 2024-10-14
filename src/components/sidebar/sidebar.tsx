@@ -12,9 +12,11 @@ import {
   LogOut,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useLogout } from "@/modules/auth/hooks/use-logout";
 
 export const Sidebar = () => {
   const { isSidebarOpen, toggleSidebar } = useSidebar();
+  const logout = useLogout();
 
   return (
     <aside
@@ -45,7 +47,7 @@ export const Sidebar = () => {
           <NavItem to="#" icon={CircleHelp} label="Ayuda" />
         </nav>
 
-        <div className="mt-auto p-4">
+        <div className="mt-auto p-4" onClick={logout}>
           <NavItem to="#" icon={LogOut} label="Cerrar Sesión" />
         </div>
       </div>
