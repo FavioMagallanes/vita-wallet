@@ -73,3 +73,8 @@
     @apply bg-gradient-to-r from-[#06b5b4] to-[#16768a] text-white hover:bg-gradient-to-t;
   }
 }
+@layer components {
+  .nav-item {
+    @apply inline-block w-[calc(100%-1.5rem)] rounded-r-full px-3 py-2 pl-6 pr-4 transition-colors duration-200 hover:bg-[#05bcb9];
+  }
+}
