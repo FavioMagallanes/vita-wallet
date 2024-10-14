@@ -1,3 +1,3 @@
-export const Exchange = () => {
-  return <div>Exchange</div>;
-};
+import { ExchangeForm } from "../components/exchange-form";
+
+export const Exchange = () => <ExchangeForm />;
