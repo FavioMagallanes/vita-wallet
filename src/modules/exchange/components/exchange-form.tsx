@@ -1,42 +1,54 @@
-import { useState } from "react";
+import { FC } from "react";
+import { useExchangeForm } from "../hooks/use-exchange-form";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { CheckCircle } from "lucide-react";
+import { CurrencySelect } from "./currency-select";
+import { ExchangeSummary } from "./exchange-summary";
+import { CurrencyOption } from "../types/crypto-prices-types";
 
-export const ExchangeForm = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [fromCurrency, setFromCurrency] = useState("USD");
-  const [toCurrency, setToCurrency] = useState("BTC");
-  const [fromAmount, setFromAmount] = useState("5.000.000,00");
-  const [toAmount, setToAmount] = useState("0,080");
-  const [showSummary, setShowSummary] = useState(false);
+export const ExchangeForm: FC = () => {
   const navigate = useNavigate();
+  const {
+    isModalOpen,
+    setIsModalOpen,
+    fromCurrency,
+    setFromCurrency,
+    toCurrency,
+    // setToCurrency,
+    fromAmount,
+    toAmount,
+    showSummary,
+    handleConfirm,
+    handleContinue,
+    handleBack,
+    handleFromAmountChange,
+    handleBlur,
+    handleToCurrencyChange,
+  } = useExchangeForm();
 
-  const handleConfirm = () => setIsModalOpen(true);
-  const handleContinue = () => setShowSummary(true);
-
-  const handleBack = () => {
-    if (showSummary) {
-      setShowSummary(false);
-    } else {
-      navigate("/dashboard");
-    }
+  const handleBackNavigation = () => {
+    if (showSummary) return handleBack();
+    navigate("/dashboard");
   };
+
+  const fromCurrencyOptions: CurrencyOption[] = [
+    { value: "USD", icon: "/public/icons/eeuu-flag.png" },
+  ];
+
+  const toCurrencyOptions: CurrencyOption[] = [
+    { value: "BTC", icon: "/public/icons/btc.svg" },
+    { value: "USDT", icon: "/public/icons/usdt.svg" },
+    { value: "USDC", icon: "/public/icons/usdc.svg" },
+  ];
 
   return (
     <>
@@ -62,39 +74,21 @@ export const ExchangeForm = () => {
                 Monto a intercambiar
               </label>
               <div className="flex w-96 gap-1.5">
-                <Select value={fromCurrency} onValueChange={setFromCurrency}>
-                  <SelectTrigger className="w-[100px] rounded-r-none">
-                    <SelectValue>
-                      <div className="flex items-center">
-                        <img
-                          src="/public/icons/eeuu-flag.png"
-                          alt="USD flag"
-                          className="mr-2 h-5 w-5 rounded"
-                        />
-                        <span className="text-xs">{fromCurrency}</span>
-                      </div>
-                    </SelectValue>
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="USD" className="text-xs">
-                      <div className="flex items-center">
-                        <img
-                          src="/public/icons/eeuu-flag.png"
-                          alt="USD flag"
-                          className="mr-2 h-5 w-5 rounded"
-                        />
-                        <span className="text-xs">USD</span>
-                      </div>
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
+                <CurrencySelect
+                  value={fromCurrency}
+                  onValueChange={setFromCurrency}
+                  options={fromCurrencyOptions}
+                />
                 <Input
                   id="from-amount"
                   type="text"
                   placeholder="Enter amount"
                   className="flex-1 rounded-l-none"
                   value={fromAmount}
-                  onChange={(e) => setFromAmount(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    handleFromAmountChange(e.target.value)
+                  }
+                  onBlur={handleBlur}
                 />
               </div>
             </div>
@@ -106,120 +100,35 @@ export const ExchangeForm = () => {
                 Quiero recibir
               </label>
               <div className="flex w-96 gap-1.5">
-                <Select value={toCurrency} onValueChange={setToCurrency}>
-                  <SelectTrigger className="w-[100px] rounded-r-none">
-                    <SelectValue className="text-xs">
-                      <div className="flex items-center">
-                        <img
-                          src="/public/icons/btc.svg"
-                          alt="BTC icon"
-                          className="mr-2 h-5 w-5 rounded-full"
-                        />
-                        <span className="text-xs">{toCurrency}</span>
-                      </div>
-                    </SelectValue>
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="BTC" className="text-xs">
-                      <div className="flex items-center">
-                        <img
-                          src="/public/icons/btc.svg"
-                          alt="BTC icon"
-                          className="mr-2 h-5 w-5 rounded-full"
-                        />
-                        <span className="text-xs">BTC</span>
-                      </div>
-                    </SelectItem>
-                    <SelectItem value="USDT" className="text-xs">
-                      <div className="flex items-center">
-                        <img
-                          src="/public/icons/tether.svg"
-                          alt="USDT icon"
-                          className="mr-2 h-5 w-5 rounded-full"
-                        />
-                        <span className="text-xs">USDT</span>
-                      </div>
-                    </SelectItem>
-                    <SelectItem value="USDC" className="text-xs">
-                      <div className="flex items-center">
-                        <img
-                          src="/public/icons/usdc.svg"
-                          alt="USDC icon"
-                          className="mr-2 h-5 w-5 rounded-full"
-                        />
-                        <span className="text-xs">USDC</span>
-                      </div>
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
+                <CurrencySelect
+                  value={toCurrency}
+                  onValueChange={handleToCurrencyChange}
+                  options={toCurrencyOptions}
+                />
                 <Input
                   id="to-amount"
                   type="text"
                   placeholder="Estimated amount"
                   className="flex-1 rounded-l-none"
                   value={toAmount}
-                  onChange={(e) => setToAmount(e.target.value)}
                   readOnly
                 />
               </div>
             </div>
           </div>
         ) : (
-          <div className="space-y-6">
-            <h3 className="text-xl font-semibold">Resumen de la transacción</h3>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                  Monto a intercambiar
-                </p>
-                <p className="text-base font-medium">
-                  {fromAmount} {fromCurrency}
-                </p>
-              </div>
-              <div>
-                <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                  Monto a recibir
-                </p>
-                <p className="text-base font-medium">
-                  {toAmount} {toCurrency}
-                </p>
-              </div>
-              <div>
-                <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                  Tasa de cambio
-                </p>
-                <p className="text-base font-medium">
-                  1 {fromCurrency} ={" "}
-                  {(
-                    parseFloat(toAmount) /
-                    parseFloat(fromAmount.replace(".", "").replace(",", "."))
-                  ).toFixed(8)}{" "}
-                  {toCurrency}
-                </p>
-              </div>
-              <div>
-                <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                  Comisión
-                </p>
-                <p className="text-base font-semibold">0.1%</p>
-              </div>
-              <div>
-                <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                  Total a recibir
-                </p>
-                <p className="text-base font-medium text-[#06b5b4]">
-                  {(
-                    parseFloat(toAmount) -
-                    parseFloat(toAmount) * 0.001
-                  ).toFixed(8)}{" "}
-                  {toCurrency}
-                </p>
-              </div>
-            </div>
-          </div>
+          <ExchangeSummary
+            fromAmount={fromAmount}
+            fromCurrency={fromCurrency}
+            toAmount={toAmount}
+            toCurrency={toCurrency}
+            onConfirm={handleConfirm}
+            onBack={handleBack}
+            error={null}
+          />
         )}
         <div className="mt-20 flex gap-2">
-          <Button variant="outline" onClick={handleBack}>
+          <Button variant="outline" onClick={handleBackNavigation}>
             Atrás
           </Button>
           {!showSummary ? (
@@ -236,22 +145,18 @@ export const ExchangeForm = () => {
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Transaction Successful</DialogTitle>
             <DialogDescription>
               <div className="flex flex-col items-center justify-center space-y-2">
-                <CheckCircle className="h-16 w-16 text-green-500" />
-                <p>Your exchange has been completed successfully.</p>
+                <img src="/public/modal-img.svg" alt="modal image" />
+                <DialogTitle className="bg-gradient-to-r from-[#06b5b4] to-[#16768a] bg-clip-text text-2xl font-extrabold text-transparent">
+                  ¡Intercambio exitoso!
+                </DialogTitle>
+                <DialogFooter className="text-lg">
+                  Ya cuentas con tus {toCurrency} en tu saldo.
+                </DialogFooter>
               </div>
             </DialogDescription>
           </DialogHeader>
-          <div className="mt-4 flex justify-center">
-            <Button
-              className="btn-gradient"
-              onClick={() => setIsModalOpen(false)}
-            >
-              Close
-            </Button>
-          </div>
         </DialogContent>
       </Dialog>
     </>

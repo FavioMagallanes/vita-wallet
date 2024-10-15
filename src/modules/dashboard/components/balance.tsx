@@ -61,7 +61,7 @@ export const Balance: FC<BalanceProps> = React.memo(({ userProfile }) => {
             amount={balances.btc}
           />
           <BalanceItem
-            icon="/public/icons/tether.svg"
+            icon="/public/icons/usdt.svg"
             alt="usdt logo"
             amount={balances.usdt}
           />

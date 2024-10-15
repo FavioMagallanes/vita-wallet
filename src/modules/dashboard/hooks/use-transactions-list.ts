@@ -6,6 +6,5 @@ export const useTransactionsList = () => {
     queryKey: ["transactionsList"],
     queryFn: getTransactionsList,
     refetchOnWindowFocus: false,
-    staleTime: 1000 * 60 * 5,
   });
 };
