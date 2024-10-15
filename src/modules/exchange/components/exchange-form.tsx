@@ -38,7 +38,6 @@ export const ExchangeForm: FC = () => {
     loading,
   } = useExchangeForm();
   const { data: userProfile } = useProfile();
-  console.log(userProfile);
 
   const handleBackNavigation = () => {
     if (showSummary) return handleBack();

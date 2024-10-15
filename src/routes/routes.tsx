@@ -3,6 +3,7 @@ import { LoginPage } from "@/modules/auth/page/login-page";
 import { Dashboard } from "@/modules/dashboard/page/dashboard";
 import { Exchange } from "@/modules/exchange/pages/exchange";
 import { createBrowserRouter } from "react-router-dom";
+import { PrivateRoute } from "./protected-route";
 
 export const router = createBrowserRouter([
   {
@@ -15,11 +16,19 @@ export const router = createBrowserRouter([
     children: [
       {
         path: "dashboard",
-        element: <Dashboard />,
+        element: (
+          <PrivateRoute>
+            <Dashboard />
+          </PrivateRoute>
+        ),
       },
       {
         path: "exchange",
-        element: <Exchange />,
+        element: (
+          <PrivateRoute>
+            <Exchange />
+          </PrivateRoute>
+        ),
       },
     ],
   },

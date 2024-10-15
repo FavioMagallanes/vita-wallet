@@ -49,6 +49,7 @@ export const useExchangeForm = () => {
       setIsModalOpen(true);
     } catch (error) {
       console.error("Error durante el intercambio:", error);
+      setIsModalOpen(true);
       setError("Hubo un error al realizar el intercambio.");
     } finally {
       setLoading(false);
