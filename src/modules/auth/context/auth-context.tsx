@@ -1,3 +1,36 @@
+/**
+ * AuthContext define el contexto de autenticación para gestionar los datos de autenticación
+ * de usuario en una aplicación React.
+ *
+ * Este contexto proporciona una interfaz para acceder y actualizar los detalles de
+ * autenticación del usuario, como la información del usuario, token, cliente, UID
+ * y tiempo de expiración. También incluye métodos para cerrar sesión y actualizar
+ * estos detalles en el almacenamiento local.
+ *
+ * @property {User | null} user - El objeto usuario que contiene los detalles del usuario,
+ *                                  o null si no hay un usuario autenticado.
+ * @property {string | null} token - El token de autenticación para la sesión del usuario,
+ *                                    o null si no está disponible.
+ * @property {string | null} client - El identificador del cliente para la sesión del usuario,
+ *                                     o null si no está disponible.
+ * @property {string | null} uid - El identificador único para el usuario,
+ *                                  o null si no está disponible.
+ * @property {string | null} expiry - El tiempo de expiración del token de sesión,
+ *                                     o null si no está disponible.
+ * @property {(user: User | null) => void} setUser - Función para actualizar el estado del usuario
+ *                                                    y el almacenamiento local.
+ * @property {(token: string | null) => void} setToken - Función para actualizar el estado del token
+ *                                                      y el almacenamiento local.
+ * @property {(client: string | null) => void} setClient - Función para actualizar el estado del cliente
+ *                                                       y el almacenamiento local.
+ * @property {(uid: string | null) => void} setUid - Función para actualizar el estado del UID
+ *                                                   y el almacenamiento local.
+ * @property {(expiry: string | null) => void} setExpiry - Función para actualizar el estado de la expiración
+ *                                                       y el almacenamiento local.
+ * @property {() => void} logout - Función para cerrar sesión del usuario y borrar todos los detalles
+ *                                  de autenticación del estado y del almacenamiento local.
+ */
+
 import { createContext, useState } from "react";
 
 type User = {
