@@ -4,50 +4,51 @@ import { calculateConversion, formatCurrency } from "@/utils/format-currency";
 import { postExchange } from "@/services/exchange/service-exchange";
 
 export const useExchangeForm = () => {
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [fromCurrency, setFromCurrency] = useState<string>("USD");
-  const [toCurrency, setToCurrency] = useState<string>("BTC");
-  const [fromAmount, setFromAmount] = useState<string>("5000.00");
-  const [toAmount, setToAmount] = useState<string>("0");
-  const [showSummary, setShowSummary] = useState<boolean>(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [fromCurrency, setFromCurrency] = useState("USD");
+  const [toCurrency, setToCurrency] = useState("BTC");
+  const [fromAmount, setFromAmount] = useState("5000.00");
+  const [toAmount, setToAmount] = useState("0");
+  const [showSummary, setShowSummary] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState(false);
   const { data: cryptoPrices } = useCryptoPrices();
 
-  const handleContinue = useCallback(() => setShowSummary(true), []);
-  const handleBack = useCallback(() => setShowSummary(false), []);
+  const handleContinue = () => setShowSummary(true);
+  const handleBack = () => setShowSummary(false);
 
   const handleFromAmountChange = useCallback((value: string) => {
     const numericValue = value.replace(/[^0-9.]/g, "");
     setFromAmount(numericValue);
   }, []);
 
-  const handleBlur = useCallback(() => {
-    const numericValue = parseFloat(fromAmount.replace(/,/g, ""));
-    const formattedValue = formatCurrency(numericValue, 2);
-    setFromAmount(formattedValue);
+  const updateToAmount = useCallback(() => {
     setToAmount(
       calculateConversion(
-        numericValue.toString(),
+        fromAmount,
         fromCurrency,
         toCurrency,
-        cryptoPrices || null,
+        cryptoPrices ?? null,
       ),
     );
   }, [fromAmount, fromCurrency, toCurrency, cryptoPrices]);
 
+  const handleBlur = useCallback(() => {
+    const numericValue = parseFloat(fromAmount.replace(/,/g, ""));
+    setFromAmount(formatCurrency(numericValue, 2));
+    updateToAmount();
+  }, [fromAmount, updateToAmount]);
+
   const handleConfirm = useCallback(async () => {
     setLoading(true);
+    setError(null);
     try {
       const numericFromAmount = parseFloat(fromAmount.replace(/,/g, ""));
-
       if (isNaN(numericFromAmount)) throw new Error("Invalid amount format");
       await postExchange(fromCurrency, toCurrency, numericFromAmount);
-
       setIsModalOpen(true);
     } catch (error) {
       console.error("Error durante el intercambio:", error);
-      setIsModalOpen(true);
       setError("Hubo un error al realizar el intercambio.");
     } finally {
       setLoading(false);
@@ -57,25 +58,14 @@ export const useExchangeForm = () => {
   const handleToCurrencyChange = useCallback(
     (value: string) => {
       setToCurrency(value);
-      setToAmount(
-        calculateConversion(
-          fromAmount,
-          fromCurrency,
-          value,
-          cryptoPrices || null,
-        ),
-      );
+      updateToAmount();
     },
-    [fromAmount, fromCurrency, cryptoPrices],
+    [updateToAmount],
   );
 
   useEffect(() => {
-    if (cryptoPrices) {
-      setToAmount(
-        calculateConversion(fromAmount, fromCurrency, toCurrency, cryptoPrices),
-      );
-    }
-  }, [cryptoPrices, fromCurrency, toCurrency, fromAmount]);
+    updateToAmount();
+  }, [updateToAmount]);
 
   return {
     isModalOpen,
@@ -83,7 +73,6 @@ export const useExchangeForm = () => {
     fromCurrency,
     setFromCurrency,
     toCurrency,
-    setToCurrency,
     fromAmount,
     toAmount,
     showSummary,
