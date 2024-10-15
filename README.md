@@ -1,50 +1,78 @@
-# React + TypeScript + Vite
+# 🌍💼 Vita Wallet - Challenge
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Este proyecto es una aplicación web para un sistema de intercambios de divisas, donde los usuarios pueden ver sus balances, realizar transacciones, y consultar tasas de cambio actualizadas en tiempo real. La aplicación también incluye una página de inicio de sesión y funcionalidades para gestionar el intercambio de crypto monedas.
 
-Currently, two official plugins are available:
+## 🎯 Descripción del Desafío
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+El objetivo del desafío es desarrollar un sistema de intercambio de divisas utilizando React y React Context. La aplicación permite a los usuarios:
 
-## Expanding the ESLint configuration
+- 🔐 Iniciar sesión con credenciales dadas.
+- 📊 Visualizar su balance e historial de transacciones.
+- 💱 Realizar intercambios de divisas.
+- 💹 Validar tasas de cambio y mostrar balances actualizados.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+### 🔗 Endpoints Consumidos
 
-- Configure the top-level `parserOptions` property like this:
+- **🔐 Iniciar sesión**: `https://api.qa.vitawallet.io/api/auth/sign_in`
+- **👤 Obtener información del perfil**: `https://api.qa.vitawallet.io/api/profile`
+- **📈 Obtener precios de criptomonedas**: `https://api.qa.vitawallet.io/api/users/get_crypto_multi_prices`
+- **💸 Listar transacciones**: `https://api.qa.vitawallet.io/api/transactions`
+- **💱 Realizar intercambio**: `https://api.qa.vitawallet.io/api/transactions/exchange`
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+## 🛠️ Tecnologías Utilizadas
+
+El proyecto está construido con las siguientes tecnologías:
+
+- ⚛️ **React**
+- 🟦 **TypeScript**
+- 🔗 **React Context**
+- 📝 **React Hook Form**
+- 🔄 **TanStack Query**
+- 📡 **Axios**
+- 🎨 **Shadcn/ui**
+- 🖌️ **Tailwind CSS**
+- 🔍 **Lucide Icons**
+- ⚡ **Vite**
+- 📏 **ESLint y Prettier**
+
+## 🚀 Funcionalidades
+
+### 🔐 Página de Inicio de Sesión
+
+- Permite a los usuarios autenticarse utilizando credenciales proporcionadas.
+- Al iniciar sesión correctamente, se guarda el token de autenticación y se utiliza en las solicitudes subsecuentes.
+
+### 🏠 Home (Dashboard)
+
+- Muestra el balance actual del usuario y sus transacciones más recientes.
+
+### 💱 Página de Intercambio
+
+- Permite a los usuarios realizar intercambios de criptomonedas de acuerdo a las tasas de cambio.
+- Validación de tasas de cambio y balances antes de confirmar la transacción.
+
+## 📝 Instalación y Uso
+
+1. Clona el repositorio:
+
+```bash
+git clone https://github.com/FavioMagallanes/vita-wallet.git
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+2. Navega al directorio del proyecto:
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+```bash
+cd vita-wallet-challenge
+```
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+3. Instala las dependencias:
+
+```bash
+npm install
+```
+
+4. Inicia el servidor de desarrollo:
+
+```bash
+npm run dev
 ```
