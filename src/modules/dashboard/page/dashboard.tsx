@@ -1,6 +1,6 @@
 import { useProfile } from "@/modules/dashboard/hooks/use-profile";
-import { Balance } from "../components/balance";
-import { TransactionsList } from "../components/transactions-list";
+import { Balance } from "../components/balance/balance";
+import { TransactionsList } from "../components/transactions/transactions-list";
 import { useTransactionsList } from "../hooks/use-transactions-list";
 import { Loader } from "lucide-react";
 

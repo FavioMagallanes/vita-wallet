@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import { CurrencySelect } from "./currency-select";
 import { ExchangeSummary } from "./exchange-summary";
 import { CurrencyOption } from "../types/crypto-prices-types";
+import { Loader } from "lucide-react";
 
 export const ExchangeForm: FC = () => {
   const navigate = useNavigate();
@@ -23,7 +24,6 @@ export const ExchangeForm: FC = () => {
     fromCurrency,
     setFromCurrency,
     toCurrency,
-    // setToCurrency,
     fromAmount,
     toAmount,
     showSummary,
@@ -33,10 +33,17 @@ export const ExchangeForm: FC = () => {
     handleFromAmountChange,
     handleBlur,
     handleToCurrencyChange,
+    error,
+    loading,
   } = useExchangeForm();
 
   const handleBackNavigation = () => {
     if (showSummary) return handleBack();
+    navigate("/dashboard");
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
     navigate("/dashboard");
   };
 
@@ -127,6 +134,7 @@ export const ExchangeForm: FC = () => {
             error={null}
           />
         )}
+
         <div className="mt-20 flex gap-2">
           <Button variant="outline" onClick={handleBackNavigation}>
             Atrás
@@ -137,25 +145,36 @@ export const ExchangeForm: FC = () => {
             </Button>
           ) : (
             <Button className="btn-gradient" onClick={handleConfirm}>
-              Intercambiar
+              {loading ? (
+                <div className="flex items-center">
+                  <Loader size={20} className="mr-2 animate-spin" />
+                  <span> Procesando..</span>
+                </div>
+              ) : (
+                "Confirmar"
+              )}
             </Button>
           )}
         </div>
       </div>
-      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+      <Dialog open={isModalOpen} onOpenChange={handleModalClose}>
         <DialogContent>
           <DialogHeader>
-            <DialogDescription>
+            <DialogTitle>
               <div className="flex flex-col items-center justify-center space-y-2">
                 <img src="/public/modal-img.svg" alt="modal image" />
-                <DialogTitle className="bg-gradient-to-r from-[#06b5b4] to-[#16768a] bg-clip-text text-2xl font-extrabold text-transparent">
-                  ¡Intercambio exitoso!
-                </DialogTitle>
+                <DialogDescription className="bg-gradient-to-r from-[#06b5b4] to-[#16768a] bg-clip-text text-2xl font-extrabold text-transparent">
+                  {error
+                    ? "Hubo un error al intercambiar"
+                    : "¡Intercambio exitoso!"}
+                </DialogDescription>
                 <DialogFooter className="text-lg">
-                  Ya cuentas con tus {toCurrency} en tu saldo.
+                  {error
+                    ? "Por favor, vuelva a intentarlo."
+                    : `Ya cuentas con tus ${toCurrency} en tu saldo.`}
                 </DialogFooter>
               </div>
-            </DialogDescription>
+            </DialogTitle>
           </DialogHeader>
         </DialogContent>
       </Dialog>

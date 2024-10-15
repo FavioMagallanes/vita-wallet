@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from "react";
 import { useCryptoPrices } from "../hooks/use-crypto-prices";
 import { calculateConversion, formatCurrency } from "@/utils/format-currency";
-import { api } from "@/config/axios/axios-instance";
+import { postExchange } from "@/services/exchange/service-exchange";
 
 export const useExchangeForm = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -10,6 +10,8 @@ export const useExchangeForm = () => {
   const [fromAmount, setFromAmount] = useState<string>("5000.00");
   const [toAmount, setToAmount] = useState<string>("0");
   const [showSummary, setShowSummary] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
   const { data: cryptoPrices } = useCryptoPrices();
 
   const handleContinue = useCallback(() => setShowSummary(true), []);
@@ -35,28 +37,20 @@ export const useExchangeForm = () => {
   }, [fromAmount, fromCurrency, toCurrency, cryptoPrices]);
 
   const handleConfirm = useCallback(async () => {
+    setLoading(true);
     try {
       const numericFromAmount = parseFloat(fromAmount.replace(/,/g, ""));
 
-      if (isNaN(numericFromAmount)) {
-        throw new Error("Invalid amount format");
-      }
+      if (isNaN(numericFromAmount)) throw new Error("Invalid amount format");
+      await postExchange(fromCurrency, toCurrency, numericFromAmount);
 
-      const response = await api.post(
-        "https://api.qa.vitawallet.io/api/transactions/exchange",
-        {
-          currency_sent: fromCurrency.toLowerCase(),
-          currency_received: toCurrency.toLowerCase(),
-          amount_sent: numericFromAmount,
-        },
-      );
-
-      if (response.status === 200) {
-        setIsModalOpen(true);
-        console.log("Exchange successful:", response.data);
-      }
+      setIsModalOpen(true);
     } catch (error) {
-      console.error("Error during exchange:", error);
+      console.error("Error durante el intercambio:", error);
+      setIsModalOpen(true);
+      setError("Hubo un error al realizar el intercambio.");
+    } finally {
+      setLoading(false);
     }
   }, [fromCurrency, toCurrency, fromAmount]);
 
@@ -99,5 +93,7 @@ export const useExchangeForm = () => {
     handleFromAmountChange,
     handleBlur,
     handleToCurrencyChange,
+    error,
+    loading,
   };
 };
