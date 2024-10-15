@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState } from "react";
 
 type User = {
   first_name: string;
@@ -23,69 +23,53 @@ export const AuthContext = createContext<AuthContextProps | undefined>(
 );
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(null);
-  const [client, setClient] = useState<string | null>(null);
-  const [uid, setUid] = useState<string | null>(null);
-  const [expiry, setExpiry] = useState<string | null>(null);
+  const getLocalStorage = (key: string) => localStorage.getItem(key);
 
-  useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    const storedToken = localStorage.getItem("token");
-    const storedClient = localStorage.getItem("client");
-    const storedUid = localStorage.getItem("uid");
-    const storedExpiry = localStorage.getItem("expiry");
+  const [user, setUser] = useState<User | null>(
+    getLocalStorage("user")
+      ? JSON.parse(getLocalStorage("user") as string)
+      : null,
+  );
+  const [token, setToken] = useState<string | null>(getLocalStorage("token"));
+  const [client, setClient] = useState<string | null>(
+    getLocalStorage("client"),
+  );
+  const [uid, setUid] = useState<string | null>(getLocalStorage("uid"));
+  const [expiry, setExpiry] = useState<string | null>(
+    getLocalStorage("expiry"),
+  );
 
-    if (storedUser) setUser(JSON.parse(storedUser));
-    if (storedToken) setToken(storedToken);
-    if (storedClient) setClient(storedClient);
-    if (storedUid) setUid(storedUid);
-    if (storedExpiry) setExpiry(storedExpiry);
-  }, []);
+  const updateLocalStorage = (key: string, value: string | null) => {
+    if (value) {
+      localStorage.setItem(key, value);
+    } else {
+      localStorage.removeItem(key);
+    }
+  };
 
   const updateUser = (newUser: User | null) => {
     setUser(newUser);
-    if (newUser) {
-      localStorage.setItem("user", JSON.stringify(newUser));
-    } else {
-      localStorage.removeItem("user");
-    }
+    updateLocalStorage("user", newUser ? JSON.stringify(newUser) : null);
   };
 
   const updateToken = (newToken: string | null) => {
     setToken(newToken);
-    if (newToken) {
-      localStorage.setItem("token", newToken);
-    } else {
-      localStorage.removeItem("token");
-    }
+    updateLocalStorage("token", newToken);
   };
 
   const updateClient = (newClient: string | null) => {
     setClient(newClient);
-    if (newClient) {
-      localStorage.setItem("client", newClient);
-    } else {
-      localStorage.removeItem("client");
-    }
+    updateLocalStorage("client", newClient);
   };
 
   const updateUid = (newUid: string | null) => {
     setUid(newUid);
-    if (newUid) {
-      localStorage.setItem("uid", newUid);
-    } else {
-      localStorage.removeItem("uid");
-    }
+    updateLocalStorage("uid", newUid);
   };
 
   const updateExpiry = (newExpiry: string | null) => {
     setExpiry(newExpiry);
-    if (newExpiry) {
-      localStorage.setItem("expiry", newExpiry);
-    } else {
-      localStorage.removeItem("expiry");
-    }
+    updateLocalStorage("expiry", newExpiry);
   };
 
   const logout = () => {
