@@ -8,8 +8,6 @@ export const Dashboard = () => {
   const { data: transactionList, isLoading, error } = useTransactionsList();
   const { data: userProfile } = useProfile();
 
-  console.log("transactionList", transactionList);
-
   if (isLoading)
     return (
       <div className="flex h-screen items-center justify-center">

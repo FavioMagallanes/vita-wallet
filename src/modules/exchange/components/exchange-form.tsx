@@ -15,6 +15,7 @@ import { CurrencySelect } from "./currency-select";
 import { ExchangeSummary } from "./exchange-summary";
 import { CurrencyOption } from "../types/crypto-prices-types";
 import { Loader } from "lucide-react";
+import { useProfile } from "@/modules/dashboard/hooks/use-profile";
 
 export const ExchangeForm: FC = () => {
   const navigate = useNavigate();
@@ -36,6 +37,8 @@ export const ExchangeForm: FC = () => {
     error,
     loading,
   } = useExchangeForm();
+  const { data: userProfile } = useProfile();
+  console.log(userProfile);
 
   const handleBackNavigation = () => {
     if (showSummary) return handleBack();
@@ -65,8 +68,13 @@ export const ExchangeForm: FC = () => {
             <h2 className="mb-4 text-2xl font-bold">
               ¿Qué deseas intercambiar?
             </h2>
-            <p className="mb-6 text-sm text-[#05bcb9]">
-              Saldo disponible: $ 900.000,00 USD
+            <p className="mb-6 text-sm font-medium text-[#05bcb9]">
+              Saldo disponible:
+              <span className="font-medium text-zinc-600">
+                {" "}
+                $
+                {userProfile?.data?.attributes.balances?.usd || "No disponible"}
+              </span>
             </p>
           </>
         )}

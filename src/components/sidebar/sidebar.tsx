@@ -51,8 +51,13 @@ export const Sidebar = () => {
           <NavItem to="#" icon={CircleHelp} label="Ayuda" />
         </nav>
 
-        <div className="mt-auto p-4" onClick={logout}>
-          <NavItem to="#" icon={LogOut} label="Cerrar Sesión" />
+        <div className="mt-auto p-4">
+          <NavItem
+            to="#"
+            icon={LogOut}
+            label="Cerrar Sesión"
+            onClick={logout}
+          />
         </div>
       </div>
     </aside>
