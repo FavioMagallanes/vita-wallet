@@ -62,7 +62,7 @@ git clone https://github.com/FavioMagallanes/vita-wallet.git
 2. Navega al directorio del proyecto:
 
 ```bash
-cd vita-wallet-challenge
+cd vita-wallet
 ```
 
 3. Instala las dependencias:
